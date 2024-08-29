@@ -109,7 +109,7 @@ func (fp *FileProcessor) Readfile(file string) (*ctxh.Conversation, error) {
 	}, nil
 }
 
-func (fp *FileProcessor) ParseConversations() ([]*ctxh.Conversation, error) {
+func (fp *FileProcessor) ParseConversations() []*ctxh.Conversation {
 	conversationFiles := fp.Conversations
 
 	conversations := []*ctxh.Conversation{}
@@ -117,11 +117,11 @@ func (fp *FileProcessor) ParseConversations() ([]*ctxh.Conversation, error) {
 	for _, file := range conversationFiles {
 		conversation, err := fp.Readfile(file)
 		if err != nil {
-			fmt.Printf("Error reading file: %s\n", err)
+			fmt.Print(err)
 			continue
 		}
 		conversations = append(conversations, conversation)
 	}
 
-	return conversations, nil
+	return conversations
 }
