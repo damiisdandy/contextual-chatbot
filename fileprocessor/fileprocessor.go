@@ -61,7 +61,7 @@ func (fp *FileProcessor) ParseMessage(message string) (ctxh.Message, error) {
 	}, nil
 }
 
-func (fp *FileProcessor) Readfile(file string) (*ctxh.Conversation, error) {
+func (fp *FileProcessor) Readfile(file string) ([]ctxh.Message, error) {
 	if !strings.Contains(file, ".txt") {
 		return nil, fmt.Errorf("File must be a Whatsapp conversation file")
 	}
@@ -74,7 +74,6 @@ func (fp *FileProcessor) Readfile(file string) (*ctxh.Conversation, error) {
 
 	messages := []ctxh.Message{}
 	lineNumber := 0
-	sender := ""
 
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
@@ -88,10 +87,6 @@ func (fp *FileProcessor) Readfile(file string) (*ctxh.Conversation, error) {
 			continue
 		}
 		lineNumber++
-		// update message sender
-		if message.Sender != fp.Reciever && message.Sender != "" {
-			sender = message.Sender
-		}
 		messages = append(messages, message)
 	}
 
@@ -100,16 +95,5 @@ func (fp *FileProcessor) Readfile(file string) (*ctxh.Conversation, error) {
 		messages = messages[1:]
 	}
 
-	return &ctxh.Conversation{
-		Sender:   sender,
-		Messages: messages,
-	}, nil
-}
-
-func (fp *FileProcessor) ParseConversations() (*ctxh.Conversation, error) {
-	conversation, err := fp.Readfile(fp.ConversationFile)
-	if err != nil {
-		return nil, err
-	}
-	return conversation, nil
+	return messages, nil
 }

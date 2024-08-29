@@ -2,18 +2,28 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
 
-	"github.com/damiisdandy/contextual-chatbot/fileprocessor"
+	"github.com/damiisdandy/contextual-chatbot/screenshotprocessor"
+	"github.com/joho/godotenv"
+	"github.com/liushuangls/go-anthropic/v2"
 )
 
 func main() {
-	processor := fileprocessor.NewFileProcessor("damilola", "_chat.txt")
-	conversation, err := processor.ParseConversations()
+	// get environment variables from .env file
+	err := godotenv.Load()
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatal("Error loading .env file")
 	}
 
-	fmt.Printf("Conversation: %s\n", conversation.Sender)
-	fmt.Print(conversation.Messages[0].Content)
+	anthropicClient := anthropic.NewClient(os.Getenv("ANTHROPIC_API_KEY"))
+
+	screenshotProcessor := screenshotprocessor.NewScreenshotProcessor(anthropicClient)
+	response, err := screenshotProcessor.ProcessImage("test.jpg")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(response)
+
 }

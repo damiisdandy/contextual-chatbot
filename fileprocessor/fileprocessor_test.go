@@ -50,23 +50,23 @@ func TestParseMessage(t *testing.T) {
 func TestReadFile(t *testing.T) {
 	t.Run("should read file correctly", func(t *testing.T) {
 		t.Run("Should gather messages", func(t *testing.T) {
-			conversation, _ := fileProcessor.Readfile("./testdata/test-pure.txt")
-			if conversation.Sender != "test" {
-				t.Errorf("Expected sender to be test, got %s", conversation.Sender)
+			messages, _ := fileProcessor.Readfile("./testdata/test-pure.txt")
+			if messages[1].Sender != "test" {
+				t.Errorf("Expected sender to be test, got %s", messages[1].Sender)
 			}
-			if len(conversation.Messages) != 5 {
-				t.Errorf("Expected 5 messages, got %d", len(conversation.Messages))
+			if len(messages) != 5 {
+				t.Errorf("Expected 5 messages, got %d", len(messages))
 			}
 		})
 
 		t.Run("Should handle line breaks", func(t *testing.T) {
-			conversation, _ := fileProcessor.Readfile("./testdata/test-with-line-breaks.txt")
-			if len(conversation.Messages) != 5 {
-				t.Errorf("Expected 5 messages, got %d", len(conversation.Messages))
+			messages, _ := fileProcessor.Readfile("./testdata/test-with-line-breaks.txt")
+			if len(messages) != 5 {
+				t.Errorf("Expected 5 messages, got %d", len(messages))
 			}
 			expectedMessage := "Hey,\nhow\nare\nyou?"
-			if conversation.Messages[0].Content != expectedMessage {
-				t.Errorf("Expected message to be %s, got %s", expectedMessage, conversation.Messages[0].Content)
+			if messages[0].Content != expectedMessage {
+				t.Errorf("Expected message to be %s, got %s", expectedMessage, messages[0].Content)
 			}
 		})
 	})
