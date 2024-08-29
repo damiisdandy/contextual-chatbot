@@ -57,11 +57,12 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 		pastQuestions += fmt.Sprintf("- %s\n", question)
 	}
 	if len(cs.PastQuestions) == 0 {
-		pastQuestions = "None"
+		pastQuestions = "None for now"
 	}
 
 	rootPrompt := fmt.Sprintf(`
 		You are a professional relationship advisor, I am going to ask you questions about my relationship with %[1]s.
+
 		You will responsed based on the following data:
 		1. Past chat logs between I and %[1]s, where %[1]s is the Sender and I am the Receiver (chat logs are below)
 		2. Past questions I've asked you (past questions are below)
