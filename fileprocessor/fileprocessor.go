@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,20 +17,15 @@ const (
 )
 
 type FileProcessor struct {
-	Conversations []string
+	ConversationFile string
 	// name of the user using the chatbot
 	Reciever string
 }
 
 func NewFileProcessor(reciever, conversationsPath string) *FileProcessor {
-	pattern := filepath.Join(conversationsPath, "*.txt")
-	files, err := filepath.Glob(pattern)
-	if err != nil {
-		log.Fatal("Error finding conversations:", err)
-	}
 	return &FileProcessor{
-		Conversations: files,
-		Reciever:      reciever,
+		ConversationFile: filepath.Join("./conversations", conversationsPath),
+		Reciever:         reciever,
 	}
 }
 
@@ -68,9 +62,12 @@ func (fp *FileProcessor) ParseMessage(message string) (ctxh.Message, error) {
 }
 
 func (fp *FileProcessor) Readfile(file string) (*ctxh.Conversation, error) {
+	if !strings.Contains(file, ".txt") {
+		return nil, fmt.Errorf("File must be a Whatsapp conversation file")
+	}
 	readFile, err := os.Open(file)
 	if err != nil {
-		return nil, errors.New("Error opening file")
+		return nil, fmt.Errorf("Error opening file: %s", err)
 	}
 	fileScanner := bufio.NewScanner(readFile)
 	fileScanner.Split(bufio.ScanLines)
@@ -109,19 +106,10 @@ func (fp *FileProcessor) Readfile(file string) (*ctxh.Conversation, error) {
 	}, nil
 }
 
-func (fp *FileProcessor) ParseConversations() []*ctxh.Conversation {
-	conversationFiles := fp.Conversations
-
-	conversations := []*ctxh.Conversation{}
-
-	for _, file := range conversationFiles {
-		conversation, err := fp.Readfile(file)
-		if err != nil {
-			fmt.Print(err)
-			continue
-		}
-		conversations = append(conversations, conversation)
+func (fp *FileProcessor) ParseConversations() (*ctxh.Conversation, error) {
+	conversation, err := fp.Readfile(fp.ConversationFile)
+	if err != nil {
+		return nil, err
 	}
-
-	return conversations
+	return conversation, nil
 }
