@@ -17,15 +17,16 @@ const (
 )
 
 type FileProcessor struct {
-	ConversationFile string
 	// name of the user using the chatbot
 	Reciever string
+	// name of the person I am chatting with
+	Peer string
 }
 
-func NewFileProcessor(reciever, conversationsPath string) *FileProcessor {
+func NewFileProcessor(reciever string) *FileProcessor {
 	return &FileProcessor{
-		ConversationFile: filepath.Join("./conversations", conversationsPath),
-		Reciever:         reciever,
+		Reciever: reciever,
+		Peer:     "",
 	}
 }
 
@@ -65,7 +66,7 @@ func (fp *FileProcessor) Readfile(file string) ([]ctxh.Message, error) {
 	if !strings.Contains(file, ".txt") {
 		return nil, fmt.Errorf("File must be a Whatsapp conversation file")
 	}
-	readFile, err := os.Open(file)
+	readFile, err := os.Open(filepath.Join("./conversations", file))
 	if err != nil {
 		return nil, fmt.Errorf("Error opening file: %s", err)
 	}
@@ -87,6 +88,9 @@ func (fp *FileProcessor) Readfile(file string) ([]ctxh.Message, error) {
 			continue
 		}
 		lineNumber++
+		if message.Sender != fp.Reciever && fp.Peer == "" {
+			fp.Peer = message.Sender
+		}
 		messages = append(messages, message)
 	}
 

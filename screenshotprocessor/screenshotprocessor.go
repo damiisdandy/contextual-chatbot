@@ -17,13 +17,12 @@ import (
 
 var ProcessScreenshotPrompt = fmt.Sprintf(`Provided is a whatsapp chat screenshot, I want you to only provide a json representatoin of this chat,
 																 it should contain a list of messages and each message should contain the following:
-																	1. Sender
-																	2. Content
-																	3. Timestamp
+																	1. sender
+																	2. content
+																	3. timestamp
 																Also note the following:
 																- Timestamp should be in the format of %s assumed we are in the year 2024
-																- Person on the right is should be called the Sender
-																- Person on the left is should be called the Reciever
+															  - The messages with the green color should be called the Reciever while the latter should be called the Sender
 																- ONLY return the json stringified
 																`, time.Now().Format("2006-01-02T15:04:05Z07:00"))
 
@@ -66,7 +65,7 @@ func (sp *ScreenshotProcessor) ProcessImage(imagePath string) (string, error) {
 				},
 			},
 		},
-		MaxTokens: 1000,
+		MaxTokens: 1500,
 	})
 	if err != nil {
 		var e *anthropic.APIError
@@ -80,6 +79,7 @@ func (sp *ScreenshotProcessor) ProcessImage(imagePath string) (string, error) {
 }
 
 func (s *ScreenshotProcessor) ParseJSONString(jsonString string) ([]contexthandler.Message, error) {
+	fmt.Println(jsonString)
 	messages := []contexthandler.Message{}
 
 	// ensure we parse only the JSON stringified
