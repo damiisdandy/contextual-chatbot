@@ -79,9 +79,14 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 		Other things to consider:
 		- Try to friendly, funny and engaging
 		- Reference the past chat logs and past questions
-		- Be concise
+		- Be short and concise
+		- your response should be less than 50 words
+		- Avoid mentioning the fact that you used chat logs and past chats
+		- Do not use the word "our" or "Based on" in your response
+		- Reply like we are texting (keep your response short and to the point)
 		- Do not repeat yourself
 		- Mention the sender by their name (%[1]s)
+		- You are to reply as a third-party person analysing me and %[1]s's relationship
 	`, cs.Peer, chatLog, pastQuestions, question)
 
 	// add new question to the context store

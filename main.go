@@ -1,6 +1,9 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -17,8 +20,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
-	// Global context store
 
 	// Parse conversation
 	fileProcessor := fileprocessor.NewFileProcessor("damilola")
@@ -44,6 +45,24 @@ func main() {
 	}
 	contextStore.AddMessages(messages)
 
-	contextStore.GeneratePromp("What do you think about our relationship?")
+	promote := contextStore.GeneratePromp("What do you think about our relationship?")
+
+	resp, err := anthropicClient.CreateMessages(context.Background(), anthropic.MessagesRequest{
+		Model: anthropic.ModelClaude3Haiku20240307,
+		Messages: []anthropic.Message{
+			anthropic.NewUserTextMessage(promote),
+		},
+		MaxTokens: 1500,
+	})
+	if err != nil {
+		var e *anthropic.APIError
+		if errors.As(err, &e) {
+			fmt.Printf("Messages error, type: %s, message: %s", e.Type, e.Message)
+		} else {
+			fmt.Printf("Messages error: %v\n", err)
+		}
+		return
+	}
+	fmt.Println(resp.Content[0].GetText())
 
 }

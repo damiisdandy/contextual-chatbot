@@ -51,7 +51,7 @@ func (sp *ScreenshotProcessor) ProcessImage(imagePath string) (string, error) {
 	}
 
 	resp, err := anthropicClient.CreateMessages(context.Background(), anthropic.MessagesRequest{
-		Model: anthropic.ModelClaude3Sonnet20240229,
+		Model: anthropic.ModelClaude3Haiku20240307,
 		Messages: []anthropic.Message{
 			{
 				Role: anthropic.RoleUser,
@@ -79,7 +79,6 @@ func (sp *ScreenshotProcessor) ProcessImage(imagePath string) (string, error) {
 }
 
 func (s *ScreenshotProcessor) ParseJSONString(jsonString string) ([]contexthandler.Message, error) {
-	fmt.Println(jsonString)
 	messages := []contexthandler.Message{}
 
 	// ensure we parse only the JSON stringified
