@@ -99,7 +99,7 @@ func (fp *FileProcessor) Readfile(file string) (*ctxh.Conversation, error) {
 	}
 
 	// remove Whatsapp data privacy info
-	if messages[0].Content == WhatsappDataPrivacyInfo {
+	if strings.Contains(messages[0].Content, WhatsappDataPrivacyInfo) {
 		messages = messages[1:]
 	}
 
