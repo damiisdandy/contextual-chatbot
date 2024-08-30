@@ -1,15 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/damiisdandy/contextual-chatbot/ai"
 	"github.com/damiisdandy/contextual-chatbot/contexthandler"
 	"github.com/damiisdandy/contextual-chatbot/fileprocessor"
 	"github.com/damiisdandy/contextual-chatbot/screenshotprocessor"
 	"github.com/joho/godotenv"
-	"github.com/liushuangls/go-anthropic/v2"
 )
 
 func main() {
@@ -18,6 +19,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	aiAgent := ai.NewAnthropicAI(os.Getenv("ANTHROPIC_API_KEY"))
 
 	// Parse conversation
 	fileProcessor := fileprocessor.NewFileProcessor("damilola")
@@ -31,10 +34,8 @@ func main() {
 	contextStore.AddMessages(messages, contexthandler.MessageSourceLogs)
 
 	// get information from screenshot
-	anthropicClient := anthropic.NewClient(os.Getenv("ANTHROPIC_API_KEY"))
-	screenshotProcessor := screenshotprocessor.NewScreenshotProcessor(anthropicClient)
+	screenshotProcessor := screenshotprocessor.NewScreenshotProcessor(aiAgent)
 	response, err := screenshotProcessor.ProcessImage("screenshot.jpg")
-	fmt.Print(response)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,25 +45,11 @@ func main() {
 	}
 	contextStore.AddMessages(messages, contexthandler.MessageSourceScreenshot)
 
-	// promote := contextStore.GeneratePromp("What do you think about our relationship? based on the most recent screenshot sent")
-	// fmt.Print(promote)
+	prompt := contextStore.GeneratePromp("What do you think about our relationship? based on the most recent screenshot sent")
 
-	// resp, err := anthropicClient.CreateMessages(context.Background(), anthropic.MessagesRequest{
-	// 	Model: anthropic.ModelClaude3Haiku20240307,
-	// 	Messages: []anthropic.Message{
-	// 		anthropic.NewUserTextMessage(promote),
-	// 	},
-	// 	MaxTokens: 1500,
-	// })
-	// if err != nil {
-	// 	var e *anthropic.APIError
-	// 	if errors.As(err, &e) {
-	// 		fmt.Printf("Messages error, type: %s, message: %s", e.Type, e.Message)
-	// 	} else {
-	// 		fmt.Printf("Messages error: %v\n", err)
-	// 	}
-	// 	return
-	// }
-	// fmt.Println(resp.Content[0].GetText())
-
+	response, err = aiAgent.ExecutePrompt(context.Background(), prompt)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Print(response)
 }
