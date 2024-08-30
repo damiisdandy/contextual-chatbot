@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -66,7 +65,7 @@ func (fp *FileProcessor) Readfile(file string) ([]ctxh.Message, error) {
 	if !strings.Contains(file, ".txt") {
 		return nil, fmt.Errorf("File must be a Whatsapp conversation file")
 	}
-	readFile, err := os.Open(filepath.Join("./conversations", file))
+	readFile, err := os.Open(file)
 	if err != nil {
 		return nil, fmt.Errorf("Error opening file: %s", err)
 	}

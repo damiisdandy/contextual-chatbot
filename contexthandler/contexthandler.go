@@ -21,14 +21,16 @@ type ContextStore struct {
 	Messages []Message
 	// who we are talking to
 	Peer string
+	User string
 	// questions we've asked the AI
 	PastQuestions []string
 }
 
-func NewContextStore(peer string) *ContextStore {
+func NewContextStore(user, peer string) *ContextStore {
 	return &ContextStore{
 		Messages:      []Message{},
 		Peer:          peer,
+		User:          user,
 		PastQuestions: []string{},
 	}
 }
@@ -79,6 +81,7 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 		- Each log has a source (%[5]s or %[6]s)
 
 		Other things to consider:
+		- My name is %[7]s, I am the user.
 		- Reference the past chat logs and past questions.
 		- when I mention screenshot, focus on the chat logs that have the source "%[6]s".
 		- keep track of the order of each screenshots and chat logs based on their timestamps.
@@ -104,7 +107,7 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 
 		My Current Question:
 		%[4]s		
-	`, cs.Peer, chatLog, pastQuestions, question, MessageSourceLogs, MessageSourceScreenshot)
+	`, cs.Peer, chatLog, pastQuestions, question, MessageSourceLogs, MessageSourceScreenshot, cs.User)
 
 	// add new question to the context store
 	cs.AddQuestion(question)

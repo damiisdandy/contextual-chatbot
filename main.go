@@ -9,7 +9,7 @@ import (
 	"github.com/damiisdandy/contextual-chatbot/ai"
 	"github.com/damiisdandy/contextual-chatbot/contexthandler"
 	"github.com/damiisdandy/contextual-chatbot/fileprocessor"
-	"github.com/damiisdandy/contextual-chatbot/screenshotprocessor"
+	sp "github.com/damiisdandy/contextual-chatbot/screenshotprocessor"
 	"github.com/joho/godotenv"
 )
 
@@ -19,8 +19,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
 	aiAgent := ai.NewAnthropicAI(os.Getenv("ANTHROPIC_API_KEY"))
+	screenshotProcessor := sp.NewScreenshotProcessor(aiAgent)
 
 	// Parse conversation
 	fileProcessor := fileprocessor.NewFileProcessor("damilola")
@@ -30,11 +30,11 @@ func main() {
 	}
 
 	// pass in the name of the person we are chatting with through chat logs
-	contextStore := contexthandler.NewContextStore(fileProcessor.Peer)
+	contextStore := contexthandler.NewContextStore("damilola", fileProcessor.Peer)
 	contextStore.AddMessages(messages, contexthandler.MessageSourceLogs)
 
 	// get information from screenshot
-	screenshotProcessor := screenshotprocessor.NewScreenshotProcessor(aiAgent)
+
 	response, err := screenshotProcessor.ProcessImage("screenshot.jpg")
 	if err != nil {
 		log.Fatal(err)

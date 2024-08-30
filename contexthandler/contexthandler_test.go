@@ -61,7 +61,7 @@ func TestAddMessages(t *testing.T) {
 	messages := []Message{}
 	_ = json.Unmarshal([]byte(AIResponse), &messages)
 	t.Run("should properly identify the sender and reciever based on AI response [screenshot]", func(t *testing.T) {
-		var contextStore = NewContextStore(Peer)
+		var contextStore = NewContextStore("test", Peer)
 		contextStore.AddMessages(messages, MessageSourceScreenshot)
 
 		senderTestTable := []struct {
@@ -91,7 +91,7 @@ func TestAddMessages(t *testing.T) {
 			}
 		}
 
-		var contextStore = NewContextStore(Peer)
+		var contextStore = NewContextStore("test", Peer)
 		contextStore.AddMessages(messages, MessageSourceLogs)
 
 		senderTestTable := []struct {

@@ -49,6 +49,10 @@ func TestParseMessage(t *testing.T) {
 
 func TestReadFile(t *testing.T) {
 	t.Run("should read file correctly", func(t *testing.T) {
+		_, err := fileProcessor.Readfile("./testdata/test-pure.txt")
+		if err != nil {
+			t.Fatalf("Error reading file: %v", err)
+		}
 		t.Run("Should gather messages", func(t *testing.T) {
 			messages, _ := fileProcessor.Readfile("./testdata/test-pure.txt")
 			if messages[1].Sender != "test" {
