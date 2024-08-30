@@ -61,7 +61,7 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 	}
 
 	rootPrompt := fmt.Sprintf(`
-		You are a professional relationship advisor, I am going to ask you questions about my relationship with %[1]s.
+		You are a dating assistant, I am going to ask you questions about my relationship with %[1]s.
 
 		You will responsed based on the following data:
 		1. Past chat logs between I and %[1]s, where %[1]s is the Sender and I am the Receiver (chat logs are below)
@@ -86,7 +86,7 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 		- Reply like we are texting (keep your response short and to the point)
 		- Do not repeat yourself
 		- Mention the sender by their name (%[1]s)
-		- You are to reply as a third-party person analysing me and %[1]s's relationship
+		- You are to reply as a third-party dating assistant analysing me and %[1]s's relationship
 	`, cs.Peer, chatLog, pastQuestions, question)
 
 	// add new question to the context store
