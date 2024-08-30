@@ -49,7 +49,7 @@ func (ai *AnthropicAI) ExecutePrompt(ctx context.Context, prompt string) (string
 func (ai *AnthropicAI) AnalyseScreenshot(ctx context.Context, image []byte) (string, error) {
 	var analyseScreenshotPrompt = fmt.Sprintf(
 		`
-	Provided is a whatsapp chat screenshot, I want you to only provide a json representatoin of this chat, it should contain a list of messages and each message should contain the following:
+	Provided is a whatsapp chat screenshot, I want you to ONLY provide a JSON representation of this chat, it should contain a list of messages, and each message should contain the following:
 		1. sender
 		2. content
 		3. timestamp

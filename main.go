@@ -44,6 +44,7 @@ func main() {
 	// Screenshot processor
 	screenshotProcessor := sp.NewScreenshotProcessor(aiAgent)
 
+	// Assign dependencies
 	root.AIAgent = aiAgent
 	root.ScreenshotProcessor = screenshotProcessor
 	root.ContextStore = contextStore
