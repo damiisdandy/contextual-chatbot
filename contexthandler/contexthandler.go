@@ -74,20 +74,9 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 		You are a dating assistant, I am going to ask you questions about my relationship with %[1]s.
 
 		You will responsed based on the following data:
-		1. Past chat logs between I and %[1]s, where %[1]s is the Sender and I am the Receiver (chat logs are below)
-		2. Past questions I've asked you (past questions are below)
-		3. Each log has a source (%[5]s or %[6]s)
-
-		<chat-logs>
-		%[2]s
-		</chat-logs>
-
-		<past-questions>
-		%[3]s
-		</past-questions>
-
-		My Current Question:
-		%[4]s
+		- Past chat logs between I and %[1]s, where %[1]s is the Sender and I am the Receiver (chat logs are below)
+		- Past questions I've asked you (past questions are below)
+		- Each log has a source (%[5]s or %[6]s)
 
 		Other things to consider:
 		- Reference the past chat logs and past questions.
@@ -103,7 +92,18 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 		- Mention the sender by their name (%[1]s).
 		- You are to reply as a third-party dating assistant analysing me and %[1]s's relationship.
 
-		- Give example of chats that drew your conclusion, also mention its source.
+		- Give example of chats that drew your conclusion, also mention its source in an expressive way.
+
+		<chat-logs>
+		%[2]s
+		</chat-logs>
+
+		<past-questions>
+		%[3]s
+		</past-questions>
+
+		My Current Question:
+		%[4]s		
 	`, cs.Peer, chatLog, pastQuestions, question, MessageSourceLogs, MessageSourceScreenshot)
 
 	// add new question to the context store
