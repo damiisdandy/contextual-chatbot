@@ -1,3 +1,4 @@
 conversations/*.txt
 screenshots/*
+!screenshots/.gitkeep
 .env
