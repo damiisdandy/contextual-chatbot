@@ -38,6 +38,11 @@ func NewContextStore(user, peer string) *ContextStore {
 }
 
 func (cs *ContextStore) AddMessages(messages []Message, source string) {
+	if source == MessageSourceScreenshot {
+		sort.Slice(messages, func(i, j int) bool {
+			return messages[j].Timestamp.After(messages[i].Timestamp)
+		})
+	}
 	for _, message := range messages {
 		sender := strings.TrimSpace(message.Sender)
 		if sender != "Sender" && sender != "Receiver" {
@@ -51,10 +56,6 @@ func (cs *ContextStore) AddMessages(messages []Message, source string) {
 		message.Source = source
 		cs.Messages = append(cs.Messages, message)
 	}
-
-	sort.Slice(cs.Messages, func(i, j int) bool {
-		return cs.Messages[j].Timestamp.After(cs.Messages[i].Timestamp)
-	})
 }
 
 func (cs *ContextStore) AddQuestion(question string) {
@@ -86,7 +87,6 @@ func (cs *ContextStore) GeneratePrompt(question string) string {
 		- My name is %[7]s, I am the user.
 		- I will refer to you as %[8]s.
 		- Reference the past chat logs and past questions.
-		- when I mention screenshot, focus on the chat logs that have the source "%[6]s".
 		- keep track of the order of each screenshots and chat logs based on their timestamps.
 
 		- Be short and concise, reply like we are texting (keep your response short and to the point).
@@ -100,6 +100,8 @@ func (cs *ContextStore) GeneratePrompt(question string) string {
 
 		- Give example of chats that drew your conclusion, also mention its source in an expressive way.
 
+		- Do not put your responses in a list format nor bullet point unless I ask you to.
+
 		<chat-logs>
 		%[2]s
 		</chat-logs>
@@ -110,6 +112,8 @@ func (cs *ContextStore) GeneratePrompt(question string) string {
 
 		My Current Question:
 		%[4]s		
+
+		When I mention screenshot, focus on the chat logs that have the source "%[6]s".
 	`, cs.Peer, chatLog, pastQuestions, question, MessageSourceLogs, MessageSourceScreenshot, cs.User, ai.ChatbotName)
 
 	// add new question to the context store

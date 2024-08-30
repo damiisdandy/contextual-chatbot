@@ -107,5 +107,5 @@ func (t *TUI) HandleAskQuestionWithScreenshot() {
 		fmt.Printf("%s\nLooks like I've already looked into screenshot %q. You can ask your question%s\n\n", Yellow, filename, Reset)
 	}
 	// Ask question
-	t.HandleAskQuestion("\n based on the most recent screenshot sent")
+	t.HandleAskQuestion("\n based on the most recent screenshot sent, reply based on the recent call logs of source " + ch.MessageSourceScreenshot)
 }
