@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -30,12 +28,13 @@ func main() {
 
 	// pass in the name of the person we are chatting with through chat logs
 	contextStore := contexthandler.NewContextStore(fileProcessor.Peer)
-	contextStore.AddMessages(messages)
+	contextStore.AddMessages(messages, contexthandler.MessageSourceLogs)
 
 	// get information from screenshot
 	anthropicClient := anthropic.NewClient(os.Getenv("ANTHROPIC_API_KEY"))
 	screenshotProcessor := screenshotprocessor.NewScreenshotProcessor(anthropicClient)
-	response, err := screenshotProcessor.ProcessImage("test.jpg")
+	response, err := screenshotProcessor.ProcessImage("screenshot.jpg")
+	fmt.Print(response)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,26 +42,27 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	contextStore.AddMessages(messages)
+	contextStore.AddMessages(messages, contexthandler.MessageSourceScreenshot)
 
-	promote := contextStore.GeneratePromp("What do you think about our relationship?")
+	// promote := contextStore.GeneratePromp("What do you think about our relationship? based on the most recent screenshot sent")
+	// fmt.Print(promote)
 
-	resp, err := anthropicClient.CreateMessages(context.Background(), anthropic.MessagesRequest{
-		Model: anthropic.ModelClaude3Haiku20240307,
-		Messages: []anthropic.Message{
-			anthropic.NewUserTextMessage(promote),
-		},
-		MaxTokens: 1500,
-	})
-	if err != nil {
-		var e *anthropic.APIError
-		if errors.As(err, &e) {
-			fmt.Printf("Messages error, type: %s, message: %s", e.Type, e.Message)
-		} else {
-			fmt.Printf("Messages error: %v\n", err)
-		}
-		return
-	}
-	fmt.Println(resp.Content[0].GetText())
+	// resp, err := anthropicClient.CreateMessages(context.Background(), anthropic.MessagesRequest{
+	// 	Model: anthropic.ModelClaude3Haiku20240307,
+	// 	Messages: []anthropic.Message{
+	// 		anthropic.NewUserTextMessage(promote),
+	// 	},
+	// 	MaxTokens: 1500,
+	// })
+	// if err != nil {
+	// 	var e *anthropic.APIError
+	// 	if errors.As(err, &e) {
+	// 		fmt.Printf("Messages error, type: %s, message: %s", e.Type, e.Message)
+	// 	} else {
+	// 		fmt.Printf("Messages error: %v\n", err)
+	// 	}
+	// 	return
+	// }
+	// fmt.Println(resp.Content[0].GetText())
 
 }

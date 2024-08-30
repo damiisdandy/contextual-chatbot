@@ -21,8 +21,8 @@ var ProcessScreenshotPrompt = fmt.Sprintf(`Provided is a whatsapp chat screensho
 																	2. content
 																	3. timestamp
 																Also note the following:
-																- Timestamp should be in the format of %s assumed we are in the year 2024
-															  - The messages with the green color should be called the Reciever while the latter should be called the Sender
+																- Timestamp should be in the format of %s assume we are in the year 2024
+															  - The messages with the greenish chat bubble should be called the Reciever while the latter should be called the Sender
 																- ONLY return the json stringified
 																`, time.Now().Format("2006-01-02T15:04:05Z07:00"))
 
