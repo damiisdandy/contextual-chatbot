@@ -11,6 +11,7 @@ import (
 
 const MaxTokens = 1500
 const AIModel = anthropic.ModelClaude3Haiku20240307
+const ChatbotName = "Christie"
 
 type AnthropicAI struct {
 	Client *anthropic.Client

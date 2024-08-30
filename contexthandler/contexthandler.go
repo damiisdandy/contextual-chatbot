@@ -5,6 +5,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/damiisdandy/contextual-chatbot/ai"
 )
 
 const MessageSourceScreenshot = "screenshot"
@@ -59,7 +61,7 @@ func (cs *ContextStore) AddQuestion(question string) {
 	cs.PastQuestions = append(cs.PastQuestions, question)
 }
 
-func (cs *ContextStore) GeneratePromp(question string) string {
+func (cs *ContextStore) GeneratePrompt(question string) string {
 	chatLog := ""
 	for _, message := range cs.Messages {
 		chatLog += fmt.Sprintf("[%s] [source: %s] %s: %s\n", message.Timestamp, message.Source, message.Sender, message.Content)
@@ -82,6 +84,7 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 
 		Other things to consider:
 		- My name is %[7]s, I am the user.
+		- I will refer to you as %[8]s.
 		- Reference the past chat logs and past questions.
 		- when I mention screenshot, focus on the chat logs that have the source "%[6]s".
 		- keep track of the order of each screenshots and chat logs based on their timestamps.
@@ -107,7 +110,7 @@ func (cs *ContextStore) GeneratePromp(question string) string {
 
 		My Current Question:
 		%[4]s		
-	`, cs.Peer, chatLog, pastQuestions, question, MessageSourceLogs, MessageSourceScreenshot, cs.User)
+	`, cs.Peer, chatLog, pastQuestions, question, MessageSourceLogs, MessageSourceScreenshot, cs.User, ai.ChatbotName)
 
 	// add new question to the context store
 	cs.AddQuestion(question)
