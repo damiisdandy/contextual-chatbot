@@ -79,7 +79,7 @@ func main() {
 				contextStore.AddMessages(messages, ch.MessageSourceScreenshot)
 				root.AddScreenshot(filename, jsonString)
 			} else {
-				fmt.Printf("%s\nLooks like I've already looked in screenshot %q. You can ask your question%s\n\n", tui.Yellow, filename, tui.Reset)
+				fmt.Printf("%s\nLooks like I've already looked into screenshot %q. You can ask your question%s\n\n", tui.Yellow, filename, tui.Reset)
 			}
 
 			// Ask question
