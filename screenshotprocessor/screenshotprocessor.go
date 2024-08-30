@@ -50,5 +50,17 @@ func (s *ScreenshotProcessor) ParseJSONString(jsonString string) ([]contexthandl
 		return nil, fmt.Errorf("Error parsing AI response: %s", err)
 	}
 
-	return messages, nil
+	// avoid display of replied messages
+	output := []contexthandler.Message{}
+	hashmap := make(map[string]string) // map message to sender
+	for _, message := range messages {
+		exists := hashmap[message.Content] != ""
+		if exists && hashmap[message.Content] != message.Sender {
+			continue
+		}
+		hashmap[message.Content] = message.Sender
+		output = append(output, message)
+	}
+
+	return output, nil
 }

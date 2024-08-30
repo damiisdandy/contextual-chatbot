@@ -26,4 +26,12 @@ func TestParseJSONString(t *testing.T) {
 			t.Fatalf("Error parsing JSON string: %s", err)
 		}
 	})
+
+	t.Run("remove duplicate because AI sees a reply as a new message", func(t *testing.T) {
+		mockAIResponse = `[{"sender":"Sender","content":"Call Him","timestamp":"2024-08-29T22:12:00+01:00"},{"sender":"Reciever","content":"Call Him","timestamp":"2024-08-29T22:12:00+01:00"},{"sender":"Reciever","content":"Okay","timestamp":"2024-08-29T22:12:00+01:00"}]`
+		messages, _ := screenShotProcess.ParseJSONString(mockAIResponse)
+		if len(messages) != 2 {
+			t.Errorf("Expected 2 messages, got %d", len(messages))
+		}
+	})
 }
