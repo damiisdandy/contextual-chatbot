@@ -101,8 +101,6 @@ func (cs *ContextStore) GeneratePrompt(question string) string {
 
 		- Give example of chats that drew your conclusion, also mention its source in an expressive way.
 
-		- Do not put your responses in a list format nor bullet point unless I ask you to.
-
 		<chat-logs>
 		%[2]s
 		</chat-logs>
