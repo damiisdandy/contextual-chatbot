@@ -86,7 +86,8 @@ func (cs *ContextStore) GeneratePrompt(question string) string {
 		Other things to consider:
 		- My name is %[7]s, I am the user.
 		- I will refer to you as %[8]s.
-		- Reference the past chat logs and past questions.
+		- Reference the past chat logs by the message sent.
+		- Reference the past questions.
 		- keep track of the order of each screenshots and chat logs based on their timestamps.
 
 		- Be short and concise, reply like we are texting (keep your response short and to the point).
